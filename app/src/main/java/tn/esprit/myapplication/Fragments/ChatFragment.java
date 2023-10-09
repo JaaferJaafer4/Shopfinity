@@ -3,12 +3,14 @@ package tn.esprit.myapplication.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,13 @@ public class ChatFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(new MyAdapter(requireActivity().getApplicationContext(), items));
 
+        // Obtain a reference to the FrameLayout
+        FrameLayout childFragmentContainer = v.findViewById(R.id.chat_room);
+
+        // Replace the content of the FrameLayout with HomeFragment
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(childFragmentContainer.getId(), new ChatRoomFragment());
+        transaction.commit();
         return v;
     }
 }
