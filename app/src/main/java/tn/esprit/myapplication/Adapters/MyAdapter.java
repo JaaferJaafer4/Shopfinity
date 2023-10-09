@@ -1,4 +1,4 @@
-package tn.esprit.myapplication;
+package tn.esprit.myapplication.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import tn.esprit.myapplication.R;
 import tn.esprit.myapplication.items.ChatItem;
 
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
@@ -31,10 +32,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
            holder.nameView.setText(items.get(position).getName());
            holder.imageView.setImageResource(items.get(position).getImage());
+           holder.textView.setText(items.get(position).getText());
+           holder.dateView.setText(items.get(position).getDate());
     }
 
     @Override
     public int getItemCount() {
         return items.size();
     }
+
+
 }
