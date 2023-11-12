@@ -1,20 +1,51 @@
 package tn.esprit.myapplication.items;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ChatMessageModel {
+    public static ArrayList<ChatMessageModel> messageArrayList = new ArrayList<>();
+
+    private int id;
     private String message;
-    private String senderId;
+    private int senderId;
+    private int receiverId;
     private Date time;
 
     public ChatMessageModel() {
     }
 
-    public ChatMessageModel(String message, String senderId, Date time) {
+    public ChatMessageModel(String message, int senderId, int receiverId, Date time) {
+        this.message = message;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.time = time;
+    }
+
+    public ChatMessageModel(String message, int senderId, Date time) {
         this.message = message;
         this.senderId = senderId;
         this.time = time;
+    }
+
+    public ChatMessageModel(int id, String message, int senderId, int receiverId, Date time) {
+        this.id = id;
+        this.message = message;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatMessageModel{" +
+                "id=" + id +
+                ", message='" + message + '\'' +
+                ", senderId=" + senderId +
+                ", receiverId=" + receiverId +
+                ", time=" + time +
+                '}';
     }
 
     public String getMessage() {
@@ -25,19 +56,37 @@ public class ChatMessageModel {
         this.message = message;
     }
 
-    public String getSenderId() {
+    public int getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(String senderId) {
+    public void setSenderId(int senderId) {
         this.senderId = senderId;
     }
 
-    public Date getDate() {
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(int receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    public Date getTime() {
         return time;
     }
 
-    public void setDate(Date time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 }

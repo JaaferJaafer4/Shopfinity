@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ public class ChatRecycleAdapter extends RecyclerView.Adapter<ChatRecycleAdapter.
     Context context;
     List<ChatMessageModel> items;
 
+
     public ChatRecycleAdapter(Context context, List<ChatMessageModel> items) {
         this.context = context;
         this.items = items;
@@ -30,14 +32,17 @@ public class ChatRecycleAdapter extends RecyclerView.Adapter<ChatRecycleAdapter.
     @NonNull
     @Override
     public ChatModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ChatModelViewHolder(LayoutInflater.from(context).inflate(R.layout.chat_message,parent,false));
+        return new ChatModelViewHolder(LayoutInflater.from(context).inflate(R.layout.chat_message, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position) {
         ChatMessageModel message = items.get(position);
 
-        if (message.getSenderId().equals("1")) {
+        System.out.println("Message :" + message);
+
+
+        if (message.getSenderId() == 1) {
             holder.leftChatLayout.setVisibility(View.VISIBLE);
             holder.rightChatLayout.setVisibility(View.GONE);
             holder.leftChatTextview.setText(message.getMessage());
@@ -50,8 +55,11 @@ public class ChatRecycleAdapter extends RecyclerView.Adapter<ChatRecycleAdapter.
 
 
 
+
     @Override
     public int getItemCount() {
+
+
         return items.size();
     }
 
@@ -64,6 +72,12 @@ public class ChatRecycleAdapter extends RecyclerView.Adapter<ChatRecycleAdapter.
         public ChatModelViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            itemView.setLayoutParams(params);
             leftChatLayout = itemView.findViewById(R.id.left_chat_layout);
             rightChatLayout = itemView.findViewById(R.id.right_chat_layout);
             leftChatTextview = itemView.findViewById(R.id.left_chat_message);
