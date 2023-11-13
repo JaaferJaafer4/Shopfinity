@@ -85,7 +85,7 @@ public class ChatRoomFragment extends Fragment implements RecyclerViewInterface 
 
 
                 SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(requireContext());
-                sqLiteManager.addMessageToDatabase(newMessage);
+                newMessage.setId(sqLiteManager.addMessageToDatabase(newMessage));
                 newMessage.setReceiverId(2);
                 newMessage.setSenderId(1);
 
@@ -133,43 +133,37 @@ public class ChatRoomFragment extends Fragment implements RecyclerViewInterface 
         SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(requireContext());
         sqLiteManager.getMessagesBySenderIdAndReceiverId(ChatItem.getSelectedProfile().getId(), 1);
 
-
-
     }
 
 
     @Override
     public void onItemLongClick(int position) {
-        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(requireContext());
+        if(ChatMessageModel.messageArrayList.get(position).getSenderId() == 1) {
+            SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(requireContext());
 
-        try {
-            sqLiteManager.getWritableDatabase().beginTransaction();
+            try {
+                sqLiteManager.getWritableDatabase().beginTransaction();
 
-            ChatMessageModel messageModel = ChatMessageModel.messageArrayList.get(position);
-
-
-            sqLiteManager.removeMessageFromDatabase(messageModel.getId());
+                ChatMessageModel messageModel = ChatMessageModel.messageArrayList.get(position);
 
 
-            ChatMessageModel.messageArrayList.remove(position);
+                sqLiteManager.removeMessageFromDatabase(messageModel.getId());
 
 
-            adapter.notifyItemRemoved(position);
+                ChatMessageModel.messageArrayList.remove(position);
 
 
-            sqLiteManager.getWritableDatabase().setTransactionSuccessful();
-        } catch (Exception e) {
+                adapter.notifyItemRemoved(position);
 
-            e.printStackTrace();
-        } finally {
-
-            sqLiteManager.getWritableDatabase().endTransaction();
-
-
-            loadFromDBToMemory();
-            adapter.notifyDataSetChanged();
+                sqLiteManager.getWritableDatabase().setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                sqLiteManager.getWritableDatabase().endTransaction();
+            }
         }
     }
+
 
 
 }

@@ -77,19 +77,21 @@ public class SQLiteManager extends SQLiteOpenHelper
     }
 
 
-    public void addMessageToDatabase(ChatMessageModel message)
-    {
+    public int addMessageToDatabase(ChatMessageModel message) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-
+        int id = getMaxId() + 1;
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ID_FIELD, message.getId());
+        contentValues.put(ID_FIELD, id);
         contentValues.put(MESSAGE_FIELD, message.getMessage());
         contentValues.put(SENDER_FIELD, message.getSenderId());
         contentValues.put(RECEIVER_FIELD, message.getReceiverId());
         contentValues.put(TIME_FIELD, message.getTime().getTime());
 
         sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
+        return id;
     }
+
+
 
     public void populateNoteListArray()
     {
@@ -115,6 +117,7 @@ public class SQLiteManager extends SQLiteOpenHelper
             Collections.reverse(ChatMessageModel.messageArrayList);
         }
     }
+
 
     public void getMessagesBySenderIdAndReceiverId(int senderId, int receiverId) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -147,7 +150,7 @@ public class SQLiteManager extends SQLiteOpenHelper
     }
 
 
-    public void updateMessageInDB(ChatMessageModel chatMessageModel)
+   /* public void updateMessageInDB(ChatMessageModel chatMessageModel)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -158,6 +161,19 @@ public class SQLiteManager extends SQLiteOpenHelper
         contentValues.put(TIME_FIELD, chatMessageModel.getTime().getTime());
 
         sqLiteDatabase.update(TABLE_NAME, contentValues, ID_FIELD + " =? ", new String[]{String.valueOf(chatMessageModel.getId())});
+    }*/
+
+    private int getMaxId() {
+        int maxId = 0;
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        try (Cursor result = sqLiteDatabase.rawQuery("SELECT MAX(" + ID_FIELD + ") FROM " + TABLE_NAME, null)) {
+            if (result.moveToFirst()) {
+                maxId = result.getInt(0);
+            }
+        }
+
+        return maxId;
     }
 
 
