@@ -10,7 +10,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import tn.esprit.myapplication.items.ChatMessageModel;
 
@@ -30,8 +33,6 @@ public class SQLiteManager extends SQLiteOpenHelper
     private static final String RECEIVER_FIELD = "receiverId";
     private static final String TIME_FIELD = "time";
 
-    @SuppressLint("SimpleDateFormat")
-    private static final DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 
     public SQLiteManager(Context context)
     {
@@ -65,22 +66,16 @@ public class SQLiteManager extends SQLiteOpenHelper
                 .append(RECEIVER_FIELD)
                 .append(" INT ,")
                 .append(TIME_FIELD)
-                .append(" DATE)");
+                .append(" INTEGER)");
 
         sqLiteDatabase.execSQL(sql.toString());
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion)
-    {
-//        switch (oldVersion)
-//        {
-//            case 1:
-//                sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + NEW_COLUMN + " TEXT");
-//            case 2:
-//                sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + NEW_COLUMN + " TEXT");
-//        }
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
     }
+
 
     public void addMessageToDatabase(ChatMessageModel message)
     {
@@ -117,8 +112,40 @@ public class SQLiteManager extends SQLiteOpenHelper
                     ChatMessageModel.messageArrayList.add(messageModel);
                 }
             }
+            Collections.reverse(ChatMessageModel.messageArrayList);
         }
     }
+
+    public void getMessagesBySenderIdAndReceiverId(int senderId, int receiverId) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + SENDER_FIELD + " = ? AND " + RECEIVER_FIELD + " = ?", new String[]{String.valueOf(senderId), String.valueOf(receiverId)}))
+        {
+            if(result.getCount() != 0)
+            {
+                while (result.moveToNext())
+                {
+                    int id = result.getInt(1);
+                    String message = result.getString(2);
+                    int sender = result.getInt(3);
+                    int receiver = result.getInt(4);
+                    long timestampMillis = result.getLong(5);
+
+                    Date time = new Date(timestampMillis);
+                    ChatMessageModel messageModel = new ChatMessageModel(id,message,sender,receiver,time);
+                    ChatMessageModel.messageArrayList.add(messageModel);
+                }
+            }
+            Collections.reverse(ChatMessageModel.messageArrayList);
+        }
+    }
+
+
+    public void removeMessageFromDatabase(int messageId) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.delete(TABLE_NAME, ID_FIELD + " = ?", new String[]{String.valueOf(messageId)});
+    }
+
 
     public void updateMessageInDB(ChatMessageModel chatMessageModel)
     {

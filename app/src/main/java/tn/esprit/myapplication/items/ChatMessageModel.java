@@ -1,10 +1,11 @@
 package tn.esprit.myapplication.items;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ChatMessageModel {
+public class ChatMessageModel implements Serializable {
     public static ArrayList<ChatMessageModel> messageArrayList = new ArrayList<>();
 
     private int id;
