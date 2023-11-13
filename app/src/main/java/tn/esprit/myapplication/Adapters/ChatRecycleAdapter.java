@@ -39,10 +39,7 @@ public class ChatRecycleAdapter extends RecyclerView.Adapter<ChatRecycleAdapter.
     public void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position) {
         ChatMessageModel message = items.get(position);
 
-        System.out.println("Message :" + message);
-
-
-        if (message.getSenderId() == 1) {
+        if (message.getSenderId() != 1) {
             holder.leftChatLayout.setVisibility(View.VISIBLE);
             holder.rightChatLayout.setVisibility(View.GONE);
             holder.leftChatTextview.setText(message.getMessage());
