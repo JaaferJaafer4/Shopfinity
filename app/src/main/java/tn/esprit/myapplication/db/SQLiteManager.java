@@ -10,8 +10,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import tn.esprit.myapplication.items.ChatMessageModel;
 
@@ -113,6 +115,31 @@ public class SQLiteManager extends SQLiteOpenHelper
             Collections.reverse(ChatMessageModel.messageArrayList);
         }
     }
+
+    public void getMessagesBySenderIdAndReceiverId(int senderId, int receiverId) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + SENDER_FIELD + " = ? AND " + RECEIVER_FIELD + " = ?", new String[]{String.valueOf(senderId), String.valueOf(receiverId)}))
+        {
+            if(result.getCount() != 0)
+            {
+                while (result.moveToNext())
+                {
+                    int id = result.getInt(1);
+                    String message = result.getString(2);
+                    int sender = result.getInt(3);
+                    int receiver = result.getInt(4);
+                    long timestampMillis = result.getLong(5);
+
+                    Date time = new Date(timestampMillis);
+                    ChatMessageModel messageModel = new ChatMessageModel(id,message,sender,receiver,time);
+                    ChatMessageModel.messageArrayList.add(messageModel);
+                }
+            }
+            Collections.reverse(ChatMessageModel.messageArrayList);
+        }
+    }
+
 
     public void removeMessageFromDatabase(int messageId) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
