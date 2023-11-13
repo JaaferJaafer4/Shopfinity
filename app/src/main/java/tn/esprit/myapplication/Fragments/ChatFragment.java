@@ -65,7 +65,7 @@ public class ChatFragment extends Fragment {
                     transaction.addToBackStack(null);
                     transaction.commit();
 
-                    return true;
+                    return true; //
                 }
                 return false;
             }
