@@ -62,9 +62,9 @@ public class ChatFragment extends Fragment {
 
                     ChatItem selectedProfile = myAdapter.getItem(position);
 
-                    // Set the selected item to the ChatItem class
+
                     ChatItem.setSelectedProfile(selectedProfile);
-                    // Handle the item click here
+
                     FragmentManager fragmentManager = getParentFragmentManager();
                     ChatRoomFragment chatRoomFragment = new ChatRoomFragment();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
